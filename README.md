@@ -161,7 +161,7 @@ MMAudio was trained on several datasets, including [AudioSet](https://research.g
 
 ```bibtex
 @inproceedings{cheng2025taming,
-  title={Taming Multimodal Joint Training for High-Quality Video-to-Audio Synthesis},
+  title={{MMAudio}: Taming Multimodal Joint Training for High-Quality Video-to-Audio Synthesis},
   author={Cheng, Ho Kei and Ishii, Masato and Hayakawa, Akio and Shibuya, Takashi and Schwing, Alexander and Mitsufuji, Yuki},
   booktitle={CVPR},
   year={2025}

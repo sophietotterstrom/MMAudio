@@ -12,6 +12,7 @@ OMP_NUM_THREADS=4 torchrun --standalone --nproc_per_node=4  batch_eval.py durati
 
 You may need to update the data paths in `config/eval_data/base.yaml`. 
 More configuration options can be found in `config/base_config.yaml` and `config/eval_config.yaml`.
+You might also want to change the dataset definition if you are not evaluating on VGGSound: https://github.com/hkchengrex/MMAudio/blob/main/mmaudio/data/eval/video_dataset.py
 
 ## Precomputed Results
 

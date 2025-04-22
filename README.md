@@ -19,6 +19,12 @@ MMAudio generates synchronized audio given video and/or text inputs.
 Our key innovation is multimodal joint training which allows training on a wide range of audio-visual and audio-text datasets.
 Moreover, a synchronization module aligns the generated audio with the video frames.
 
+Check out this fun video:
+
+[![Does Your Voice Match Your Face?](https://img.youtube.com/vi/SLz3NWLyHxg/0.jpg)](https://youtu.be/SLz3NWLyHxg)
+
+[[Does Your Voice Match Your Face? https://youtu.be/SLz3NWLyHxg]](https://youtu.be/SLz3NWLyHxg)
+
 ## Results
 
 (All audio from our algorithm MMAudio)

@@ -1,22 +1,18 @@
-AudioCaps:
-  audio_path: ../data/AudioCaps-test-audioldm-ver
-  # a csv file, with a header row of 'name' and 'caption'
-  # name should match the audio file name without extension
-  # Can be downloaded here: https://github.com/hkchengrex/MMAudio/releases/download/v0.1/AudioCaps_audioldm_data.csv
-  csv_path: ../data/AudioCaps-test-audioldm-ver/data.csv
-
-AudioCaps_full:
-  audio_path: ../data/AudioCaps-test-full-ver
-  # a csv file, with a header row of 'name' and 'caption'
-  # name should match the audio file name without extension
-  # Can be downloaded here: https://github.com/hkchengrex/MMAudio/releases/download/v0.1/AudioCaps_full_data.csv
-  csv_path: ../data/AudioCaps-test-full-ver/data.csv
-
-MovieGen:
-  video_path: ../data/MovieGen/MovieGenAudioBenchSfx/video_with_audio
-  jsonl_path: ../data/MovieGen/MovieGenAudioBenchSfx/metadata
-  
 VGGSound:
-  video_path: ../data/test-videos
-  # from the officially released csv file
-  csv_path: ../data/vggsound.csv
+  #video_path: /home/hdd/sophie/data/mmaudio_test_sample/vgg_samples
+  #csv_path: /home/hdd/sophie/data/mmaudio_test_sample/vgg_samples.csv
+
+  #video_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_label_detectors/only_mp4/sav_011
+  #csv_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_label_detectors/only_mp4/blip2_27b_captions.csv
+
+  #video_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_label_detectors_blacked_out_mp4/sav_011_duration
+  #csv_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_label_detectors_blacked_out_mp4/blacked_out_blip2_27b_captions.csv
+
+  # blacked out captions but original video
+  #video_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_label_detectors/only_mp4/sav_011
+  #csv_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_label_detectors_blacked_out_mp4/blacked_out_blip2_27b_captions.csv
+
+  # duration in filenames not in csv
+  video_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_1407/sav_011
+  #csv_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_1407/labels.csv
+  csv_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_1407/florence_base_captions.csv

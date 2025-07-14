@@ -85,8 +85,8 @@ def main(cfg: DictConfig):
                               fm=fm,
                               rng=rng,
                               cfg_strength=cfg.cfg_strength,
-                              clip_batch_size_multiplier=64,
-                              sync_batch_size_multiplier=64)
+                              clip_batch_size_multiplier=8,
+                              sync_batch_size_multiplier=8)
             audios = audios.float().cpu()
             names = batch['name']
             for audio, name in zip(audios, names):

@@ -1,4 +1,4 @@
-VGGSound:
+#VGGSound:
   #video_path: /home/hdd/sophie/data/mmaudio_test_sample/vgg_samples
   #csv_path: /home/hdd/sophie/data/mmaudio_test_sample/vgg_samples.csv
 
@@ -12,7 +12,8 @@ VGGSound:
   #video_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_label_detectors/only_mp4/sav_011
   #csv_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_label_detectors_blacked_out_mp4/blacked_out_blip2_27b_captions.csv
 
+SAVDataset:
   # duration in filenames not in csv
-  video_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_1407/sav_011
+  video_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_1507
   #csv_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_1407/labels.csv
-  csv_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_1407/florence_base_captions.csv
+  csv_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_1507/florence_base_captions.csv

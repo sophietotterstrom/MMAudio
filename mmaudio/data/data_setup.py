@@ -15,6 +15,8 @@ from mmaudio.data.extracted_vgg import ExtractedVGG
 from mmaudio.data.mm_dataset import MultiModalDataset
 from mmaudio.utils.dist_utils import local_rank
 
+from mmaudio.data.eval.sav import SAVDataset
+
 log = logging.getLogger()
 
 
@@ -131,6 +133,10 @@ def setup_eval_dataset(dataset_name: str, cfg: DictConfig) -> tuple[Dataset, Dat
     elif dataset_name.startswith('vggsound'):
         dataset = VGGSound(cfg.eval_data.VGGSound.video_path,
                            cfg.eval_data.VGGSound.csv_path,
+                           duration_sec=cfg.duration_s)
+    elif dataset_name.startswith('sav'):
+        dataset = SAVDataset(cfg.eval_data.SAVDataset.video_path,
+                           cfg.eval_data.SAVDataset.csv_path,
                            duration_sec=cfg.duration_s)
     else:
         raise ValueError(f'Invalid dataset name: {dataset_name}')

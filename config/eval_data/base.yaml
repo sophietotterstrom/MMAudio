@@ -14,6 +14,6 @@
 
 SAVDataset:
   # duration in filenames not in csv
-  video_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_1507
+  video_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_1707
   #csv_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_1407/labels.csv
-  csv_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_1507/florence_base_captions.csv
+  csv_path: /home/sophie/repos/AVS/data_pipeline_scripts/test_1707/florence_base_captions.csv

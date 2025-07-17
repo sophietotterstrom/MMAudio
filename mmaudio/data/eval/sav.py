@@ -31,13 +31,11 @@ class SAVDataset(VideoDataset):
         self,
         video_root: Union[str, Path],
         csv_path: Union[str, Path],
-        net,
         *,
         duration_sec: float = 8.0,
     ):
         super().__init__(video_root, duration_sec=duration_sec)
         
-        self.net = net
         self.csv_path = Path(csv_path)
 
         # Build a mapping of video_id to full path (supporting recursive structure)
@@ -81,33 +79,21 @@ class SAVDataset(VideoDataset):
             self.video_paths[video_id] = item
 
     def sample(self, idx: int) -> dict[str, torch.Tensor]:
+        """Override parent sample method to use correct (recursive) paths."""
         video_id = self.videos[idx]
         caption = self.captions[video_id]
-        video_path = self.video_paths[video_id]  # Use stored full path
 
-        # Use constant duration from VideoDataset
-        duration_to_use = self.duration_sec
-
-        # Calculate expected lengths based on constant duration
-        clip_expected_length = self.clip_expected_length
-        sync_expected_length = self.sync_expected_length
+        # Use the actual path from our mapping instead of constructing it
+        video_path = self.video_paths[video_id]
         
-        # update MMAudio net with net seq length every video for fixed duration
-        self.net.update_seq_lengths(
-            latent_seq_len=self.net.seq_cfg.latent_seq_len,
-            clip_seq_len=clip_expected_length,
-            sync_seq_len=sync_expected_length
-        )
-        
-
         reader = StreamingMediaDecoder(video_path)
         reader.add_basic_video_stream(
-            frames_per_chunk=clip_expected_length,
+            frames_per_chunk=int(_CLIP_FPS * self.duration_sec),
             frame_rate=int(_CLIP_FPS),
             format='rgb24',
         )
         reader.add_basic_video_stream(
-            frames_per_chunk=sync_expected_length,
+            frames_per_chunk=int(_SYNC_FPS * self.duration_sec),
             frame_rate=int(_SYNC_FPS),
             format='rgb24',
         )
@@ -115,39 +101,34 @@ class SAVDataset(VideoDataset):
         reader.fill_buffer()
         data_chunk = reader.pop_chunks()
 
-        if len(data_chunk) < 2:
-            raise RuntimeError(f'Expected 2 video streams, got {len(data_chunk)} for {video_id}')
-            
         clip_chunk = data_chunk[0]
-        sync_chunk = data_chunk[1]
-        
+        sync_chunk = data_chunk[1] if len(data_chunk) > 1 else None
         if clip_chunk is None:
             raise RuntimeError(f'CLIP video returned None {video_id}')
+        if clip_chunk.shape[0] < self.clip_expected_length:
+            raise RuntimeError(
+                f'CLIP video too short {video_id}, expected {self.clip_expected_length}, got {clip_chunk.shape[0]}'
+            )
+
         if sync_chunk is None:
             raise RuntimeError(f'Sync video returned None {video_id}')
-
-        # For constant length videos, check minimum requirements like VideoDataset
-        if clip_chunk.shape[0] < clip_expected_length:
+        if sync_chunk.shape[0] < self.sync_expected_length:
             raise RuntimeError(
-                f'CLIP video too short {video_id}, expected {clip_expected_length}, got {clip_chunk.shape[0]}'
-            )
-        if sync_chunk.shape[0] < sync_expected_length:
-            raise RuntimeError(
-                f'Sync video too short {video_id}, expected {sync_expected_length}, got {sync_chunk.shape[0]}'
+                f'Sync video too short {video_id}, expected {self.sync_expected_length}, got {sync_chunk.shape[0]}'
             )
 
-        # Truncate to expected length like VideoDataset
-        clip_chunk = clip_chunk[:clip_expected_length]
-        if clip_chunk.shape[0] != clip_expected_length:
+        # truncate the video
+        clip_chunk = clip_chunk[:self.clip_expected_length]
+        if clip_chunk.shape[0] != self.clip_expected_length:
             raise RuntimeError(f'CLIP video wrong length {video_id}, '
-                               f'expected {clip_expected_length}, '
+                               f'expected {self.clip_expected_length}, '
                                f'got {clip_chunk.shape[0]}')
         clip_chunk = self.clip_transform(clip_chunk)
 
-        sync_chunk = sync_chunk[:sync_expected_length]
-        if sync_chunk.shape[0] != sync_expected_length:
+        sync_chunk = sync_chunk[:self.sync_expected_length]
+        if sync_chunk.shape[0] != self.sync_expected_length:
             raise RuntimeError(f'Sync video wrong length {video_id}, '
-                               f'expected {sync_expected_length}, '
+                               f'expected {self.sync_expected_length}, '
                                f'got {sync_chunk.shape[0]}')
         sync_chunk = self.sync_transform(sync_chunk)
 

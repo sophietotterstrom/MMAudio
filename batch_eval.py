@@ -72,11 +72,26 @@ def main(cfg: DictConfig):
         net.preprocess_conditions = torch.compile(net.preprocess_conditions)
         net.predict_flow = torch.compile(net.predict_flow)
         feature_utils.compile()
-
+        
+    # NOTE neg prompt
+    negative_prompt_str = None
+    if hasattr(cfg, 'negative_prompt') and cfg.negative_prompt:
+        negative_prompt_str = cfg.negative_prompt
+        log.info(f"Negative prompt configured: {negative_prompt_str}")
+        
+        
     dataset, loader = setup_eval_dataset(cfg.dataset, cfg)
+    
+    # TODO add reading functionality to match a column in csv with caption, negative_prompt
+    # Create a batch-specific negative prompt list only inside the loop
+    negative_text = None
+    if negative_prompt_str:
+        negative_text = [negative_prompt_str] * cfg.batch_size
+        log.info(f"Using negative prompt '{negative_prompt_str}' for batch size {cfg.batch_size}")
 
     with torch.amp.autocast(enabled=cfg.amp, dtype=torch.bfloat16, device_type=device):
-        for batch in tqdm(loader):
+        for batch in tqdm(loader):            
+            
             audios = generate(batch.get('clip_video', None),
                               batch.get('sync_video', None),
                               batch.get('caption', None),
@@ -86,7 +101,8 @@ def main(cfg: DictConfig):
                               rng=rng,
                               cfg_strength=cfg.cfg_strength,
                               clip_batch_size_multiplier=8,
-                              sync_batch_size_multiplier=8)
+                              sync_batch_size_multiplier=8,
+                              negative_text=negative_text)
             audios = audios.float().cpu()
             names = batch['name']
             for audio, name in zip(audios, names):

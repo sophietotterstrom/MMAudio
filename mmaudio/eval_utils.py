@@ -120,7 +120,7 @@ def generate(
         text_features = net.get_empty_string_sequence(bs)
 
     if negative_text is not None:
-        assert len(negative_text) == bs
+        assert len(negative_text) == bs, f"Length of negative_text ({len(negative_text)}) must match batch size ({bs})"
         negative_text_features = feature_utils.encode_text(negative_text)
     else:
         negative_text_features = net.get_empty_string_sequence(bs)

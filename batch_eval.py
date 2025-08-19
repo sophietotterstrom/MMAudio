@@ -16,6 +16,9 @@ from mmaudio.model.flow_matching import FlowMatching
 from mmaudio.model.networks import MMAudio, get_my_mmaudio
 from mmaudio.model.utils.features_utils import FeaturesUtils
 
+import warnings
+warnings.filterwarnings("ignore", message=".*bfloat16.*")
+
 torch.backends.cuda.matmul.allow_tf32 = True
 torch.backends.cudnn.allow_tf32 = True
 

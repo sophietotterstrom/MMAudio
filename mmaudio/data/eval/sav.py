@@ -40,6 +40,7 @@ class SAVDataset(VideoDataset):
 
         # Build a mapping of video_id to full path (supporting recursive structure)
         self.video_paths = {}
+        self.negatives = {}
         self._build_video_paths_recursive(self.video_root)
 
         # Read SA-V CSV format with comma separator
@@ -62,6 +63,9 @@ class SAVDataset(VideoDataset):
                 continue
                 
             self.captions[video_id] = caption
+            # optional per-sample negative prompt (column `negative`); empty -> the run's global negative prompt
+            negative = row.get('negative', '')
+            self.negatives[video_id] = '' if pd.isna(negative) else str(negative)
 
         if local_rank == 0:
             log.info(f'{len(self.video_paths)} total videos found recursively in {video_root}')
@@ -135,6 +139,7 @@ class SAVDataset(VideoDataset):
         data = {
             'name': video_id,
             'caption': caption,
+            'negative': self.negatives.get(video_id, ''),
             'clip_video': clip_chunk,
             'sync_video': sync_chunk,
         }

@@ -94,6 +94,9 @@ def main(cfg: DictConfig):
             negative_text = None
             if negative_prompt_str:
                 negative_text = [negative_prompt_str] * len(batch['name'])
+            # a per-sample negative prompt from the CSV (column `negative`) replaces the global one for that sample
+            if 'negative' in batch and any(batch['negative']):
+                negative_text = [n if n else (negative_prompt_str or '') for n in batch['negative']]
             
             audios = generate(batch.get('clip_video', None),
                               batch.get('sync_video', None),
